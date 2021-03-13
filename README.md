@@ -1,4 +1,8 @@
 # ИЗ №1 (*Индивидуальное Задание*)
+
+[![Build Status](https://travis-ci.com/tr0llex/TP_C_Cpp_HW.svg?branch=HW1)](https://travis-ci.com/tr0llex/TP_C_Cpp_HW)
+[![codecov](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW/branch/HW1/graph/badge.svg?token=OKOEZ1WBM0)](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW)
+
 ## Вариант #19
 Создать структуру для хранения информации об адресе электронной почты: домене верхнего уровня, названии почтовой службы (*mail*, *yandex*, *gmail* и т.д.) и имени пользователя. Составить с ее использованием программу, включающую в себя функцию разбора переданного на вход адреса (например, *test@mail.ru*). На выход функция должна возвращать указатель на инициализированную структуру.
 ## Требования
