@@ -1,3 +1,4 @@
 ignore:
   - "src/main.c"
-  - "tests"
+  - "tests/**/*"
+  - "build/**/*"
