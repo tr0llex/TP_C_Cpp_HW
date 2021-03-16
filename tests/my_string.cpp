@@ -5,17 +5,6 @@ extern "C" {
 #include "../src/my_string.c"
 }
 
-// int free_string(string_t *str)
-TEST(free_string, null_args) {
-    ASSERT_EQ(CODE_ERROR, free_string(nullptr));
-}
-TEST(free_string, correct_args) {
-    auto *str = (string_t *) malloc(sizeof(string_t));
-    str->string = (char*) malloc(10 * sizeof(char));
-    ASSERT_EQ(CODE_SUCCESS, free_string(str));
-}
-
-// done
 TEST(init_string, allocation) {
     string_t *str = init_string();
     EXPECT_TRUE(str != nullptr && str->string != nullptr);
@@ -23,7 +12,6 @@ TEST(init_string, allocation) {
     free_string(str);
 }
 
-// done
 TEST(enlarge_string, null_args) {
     ASSERT_EQ(CODE_ERROR, enlarge_string(nullptr));
 }
@@ -33,7 +21,6 @@ TEST(enlarge_string, correct_args) {
     free_string(str);
 }
 
-// done
 TEST(add_char, null_args) {
     ASSERT_EQ(CODE_ERROR, add_char(nullptr, 'V'));
 }
@@ -50,4 +37,13 @@ TEST(add_char, sequence_of_additions) {
     add_char(str, 'G');
     EXPECT_STREQ("a!G", str->string);
     free_string(str);
+}
+
+TEST(free_string, null_args) {
+    ASSERT_EQ(CODE_ERROR, free_string(nullptr));
+}
+TEST(free_string, correct_args) {
+    auto *str = (string_t *) malloc(sizeof(string_t));
+    str->string = (char *) calloc(2, sizeof(char));
+    ASSERT_EQ(CODE_SUCCESS, free_string((string_t *) str));
 }
