@@ -12,5 +12,6 @@ typedef struct email_address_t {
 email_address_t *init_email_struct();
 int char_is_valid(char);
 email_address_t *parse_email(string_t *);
+int free_email_struct(email_address_t *);
 
 #endif  // INCLUDE_EMAIL_PARSER_H_

@@ -56,3 +56,16 @@ email_address_t *parse_email(string_t *email_string) {
 
     return email_struct;
 }
+
+int free_email_struct(email_address_t * email_struct) {
+    if (email_struct == NULL) {
+        return CODE_ERROR;
+    }
+
+    free_string(email_struct->top_level_domain);
+    free_string(email_struct->mail_service);
+    free_string(email_struct->username);
+    free(email_struct);
+
+    return CODE_SUCCESS;
+}

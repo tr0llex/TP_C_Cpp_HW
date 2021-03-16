@@ -3,6 +3,9 @@
 
 #include <stddef.h>
 
+#define CODE_ERROR 1
+#define CODE_SUCCESS 0
+
 typedef struct {
     char *string;
     size_t count;

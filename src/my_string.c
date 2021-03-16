@@ -1,13 +1,9 @@
 #include "my_string.h"
 #include <stdlib.h>
 
-#define CODE_ERROR 1
-#define CODE_SUCCESS 0
-
 string_t *init_string() {
     string_t *new_str = malloc(sizeof(string_t));
     if (new_str == NULL) {
-        free_string(new_str);
         return NULL;
     }
     new_str->string = calloc(2, sizeof(char));  // using calloc() to init with '\0'
@@ -27,13 +23,12 @@ int enlarge_string(string_t *str) {
 
     char *temp = (char *) realloc(str->string, str->capacity * 2 * sizeof(char));
     if (temp == NULL) {
-        free(temp);
         return CODE_ERROR;
     }
 
     str->string = temp;
     str->capacity *= 2;
-    // free(temp);
+
     return CODE_SUCCESS;
 }
 
