@@ -33,7 +33,7 @@ int enlarge_string(string_t *str) {
 
     str->string = temp;
     str->capacity *= 2;
-    //free(temp);
+    // free(temp);
     return CODE_SUCCESS;
 }
 
@@ -43,7 +43,7 @@ int add_char(string_t *str, char symbol) {
     }
 
     if (str->count == str->capacity - 1) {  // minus 1 because of '\0' symbol
-        if (enlarge_string(str) != CODE_SUCCESS){
+        if (enlarge_string(str) != CODE_SUCCESS) {
             return CODE_ERROR;
         }
     }
