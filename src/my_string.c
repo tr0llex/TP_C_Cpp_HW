@@ -2,15 +2,17 @@
 #include <stdlib.h>
 
 string_t *init_string() {
-    string_t *new_str = malloc(sizeof(string_t));
+    string_t *new_str = (string_t *) malloc(sizeof(string_t));
     if (new_str == NULL) {
         return NULL;
     }
-    new_str->string = calloc(2, sizeof(char));  // using calloc() to init with '\0'
+
+    new_str->string = (char*) calloc(2, sizeof(char));  // using calloc() to init with '\0'
     if (new_str->string == NULL) {
         free_string(new_str);
         return NULL;
     }
+
     new_str->capacity = 2;
     new_str->count = 0;
     return new_str;
