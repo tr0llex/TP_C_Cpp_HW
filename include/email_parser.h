@@ -9,8 +9,6 @@ typedef struct email_address_t {
     string_t *top_level_domain;
 } email_address_t;
 
-email_address_t *init_email_struct();
-int char_is_valid(char);
 email_address_t *parse_email(string_t *);
 int free_email_struct(email_address_t *);
 

@@ -13,7 +13,6 @@ typedef struct {
 } string_t;
 
 string_t *init_string();
-int enlarge_string(string_t *);
 int add_char(string_t *, char);
 int free_string(string_t *);
 
