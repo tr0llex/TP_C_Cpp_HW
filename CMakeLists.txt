@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-project(emails)
+project(hw1)
 
-# <Coverage>
 set(CMAKE_C_FLAGS "-pedantic -fprofile-arcs -ftest-coverage")
 set(CMAKE_CXX_FLAGS "-pedantic -fprofile-arcs -ftest-coverage")
-# </Coverage>
 
-# <Test>
 configure_file(CMakeLists.txt.in
         googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -19,18 +16,6 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 
 enable_testing()
 add_subdirectory(tests)
-# </Test>
 
-# <Source>
 include_directories("${PROJECT_SOURCE_DIR}/include")
-
-file(GLOB sources
-        "${PROJECT_SOURCE_DIR}/include/*.h"
-        "${PROJECT_SOURCE_DIR}/src/*.c")
-# </Source>
-
-# <SOURCE_DIR>
-add_definitions(-DSOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
-# </SOURCE_DIR>
-
-add_executable(emails ${sources})
+add_executable(hw1 ${sources} src/main.c src/my_string.c src/email_parser.c)
