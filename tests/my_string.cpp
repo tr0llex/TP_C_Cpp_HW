@@ -5,7 +5,7 @@ extern "C" {
 #include "../src/my_string.c"
 }
 
-//int free_string(string_t *str)
+// int free_string(string_t *str)
 TEST(free_string, null_args) {
     ASSERT_EQ(CODE_ERROR, free_string(nullptr));
 }
@@ -23,7 +23,7 @@ TEST(init_string, allocation) {
     free_string(str);
 }
 
-//done
+// done
 TEST(enlarge_string, null_args) {
     ASSERT_EQ(CODE_ERROR, enlarge_string(nullptr));
 }
