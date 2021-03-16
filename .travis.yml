@@ -10,7 +10,6 @@ install:
   - sudo apt-get install valgrind
   - sudo apt-get install cppcheck
   - sudo pip install cpplint
-  - sudo apt install gcovr
 
 script:
   - cppcheck --enable=all --language=c --check-config include/*.h src/*.c --suppress=missingInclude
@@ -19,7 +18,6 @@ script:
   - cmake ..
   - make clean && make
   - valgrind --tool=memcheck --leak-check=full ctest
-  - gcovr -r . -e "src/main.c" -e "cmake-build-debug/*" -e "build/*"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
