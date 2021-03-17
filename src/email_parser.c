@@ -4,7 +4,7 @@
 
 email_address_t *init_email_struct() {
     email_address_t *email_struct = (email_address_t *) malloc(sizeof(email_address_t));
-    if (email_struct == NULL){
+    if (email_struct == NULL) {
         return NULL;
     }
     email_struct->username = init_string();
