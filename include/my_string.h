@@ -13,7 +13,7 @@ typedef struct {
 } string_t;
 
 string_t *init_string();
-int add_char(string_t *, char);
-int free_string(string_t *);
+int add_char(string_t *str, char symbol);
+int free_string(string_t *str);
 
 #endif  // INCLUDE_MY_STRING_H_
