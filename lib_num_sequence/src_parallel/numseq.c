@@ -49,7 +49,7 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, size_t arr_len
         return CODE_ERROR;
     }
 
-    size_t process_count = sysconf(_SC_NPROCESSORS_ONLN);
+    size_t process_count = (arr_length > 100) ? sysconf(_SC_NPROCESSORS_ONLN) : 2;
 
     size_t *ranges = (size_t *) calloc(process_count + 1, sizeof(size_t));
     create_ranges(process_count, arr_length, ranges);
@@ -69,47 +69,54 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, size_t arr_len
         close(pipes[current_id][0]);
 
         subsequence subseq_cur = {0, 0, 0};
-        subsequence subseq_max_child = {0, ranges[current_id + 1], 0};
-        subsequence subseq_first = {ranges[current_id], 0, 0};  // структура, хранящая subseq начинающийся с 0 индекса
+        subsequence subseq_max_child = {0, 0, 0};
+        subsequence subseq_first = {0, 0, 0};
+        subsequence subseq_last = {0, 0, 0};
 
-        for (size_t i = ranges[current_id]; i <= ranges[current_id + 1]; i++) {
+        for (size_t i = ranges[current_id]; i < ranges[current_id + 1]; i++) {
             char ch = arr[i];
             if ((ch >= '0') && (ch <= '9')) {
                 if (subseq_cur.len == 0) {
                     subseq_cur.start = i;
+                    subseq_last.start = i;
+                    subseq_last.len = 0;
                 }
                 subseq_cur.len++;
+                subseq_last.len++;
                 if (subseq_cur.len > subseq_max_child.len) {
                     subseq_max_child.start = subseq_cur.start;
-                    subseq_max_child.end = subseq_cur.start + subseq_cur.len;
                     subseq_max_child.len = subseq_cur.len;
                 }
-            } else {
-                if (subseq_cur.start == ranges[current_id]) {
-                    subseq_first.end = subseq_cur.end;
+                if (subseq_first.len == 0) {
+                    subseq_first.start = subseq_cur.start;
                     subseq_first.len = subseq_cur.len;
                 }
+                if (subseq_first.start == subseq_cur.start) {
+                    subseq_first.len = subseq_cur.len;
+                }
+            } else {
+                if (subseq_cur.len > 0) {
+                    subseq_last.len = subseq_cur.len;
+                    subseq_last.start = subseq_cur.start;
+                }
                 subseq_cur.len = 0;
+                subseq_cur.start = 0;
             }
+            subseq_max_child.end = subseq_max_child.start + subseq_max_child.len;
+            subseq_first.end = subseq_first.start + subseq_first.len;
+            subseq_last.end = subseq_last.start + subseq_last.len;
         }
+
         write(pipes[current_id][1], &subseq_max_child, sizeof(subsequence));
         write(pipes[current_id][1], &subseq_first, sizeof(subsequence));
-
-        int ends_with_digit = 0;
-        if (subseq_cur.len > 0) {
-            ends_with_digit = 1;
-            write(pipes[current_id][1], &ends_with_digit, sizeof(int));
-            write(pipes[current_id][1], &subseq_cur, sizeof(subsequence));
-        } else {
-            write(pipes[current_id][1], &ends_with_digit, sizeof(int));
-        }
+        write(pipes[current_id][1], &subseq_last, sizeof(subsequence));
 
         close(pipes[current_id][1]);
         free_ranges_and_processes(ranges, processes);
         exit(0);
     }
 
-    // структура для хранения подпоследовательностей, лежащих на нескольких отрезках
+    // Структура для хранения подпоследовательностей, лежащих на нескольких отрезках
     subsequence subseq_global = {0, 0, 0};
 
     // PARENT PROCESS
@@ -131,29 +138,25 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, size_t arr_len
 
         subsequence subseq_child_first = {0, 0, 0};
         read(pipes[i][0], &subseq_child_first, sizeof(subsequence));
-        int ends_with_digit = 0;
-        read(pipes[i][0], &ends_with_digit, sizeof(int));
 
         subsequence subseq_child_last = {0, 0, 0};
-        if (ends_with_digit) {
-            read(pipes[i][0], &subseq_child_last, sizeof(subsequence));
-        }
+        read(pipes[i][0], &subseq_child_last, sizeof(subsequence));
 
-        if (subseq_global.len > 0) {  // если в прошлых процессах уже была незаконченная subseq
-            // то добавляем продолжение незаконченной subseq
-            subseq_global.len += subseq_child_first.len;
-            subseq_global.end = subseq_child_first.end;
-            // если незаконченая subseq больше максимальной subseq
+
+        if (subseq_global.len > 0) {
+            if (subseq_child_first.start == ranges[i]) {
+                subseq_global.len += subseq_child_first.len;
+                subseq_global.end = subseq_child_first.end;
+            }
             if (subseq_global.len > subseq_max->len) {
                 subseq_max->start = subseq_global.start;
                 subseq_max->end = subseq_global.end;
                 subseq_max->len = subseq_global.len;
             }
-            // если незаконченная subseq закончилась
-            if ((subseq_global.end != subseq_child_last.end && ends_with_digit) || !ends_with_digit) {
-                subseq_global = (const subsequence) {0};  // обнуляем
+            if (subseq_child_first.start != ranges[i]) {
+                subseq_global = (const subsequence) {0};
             }
-        } else if (ends_with_digit) {
+        } else if (subseq_global.len == 0 && subseq_child_last.end == ranges[i + 1]) {
             subseq_global.start = subseq_child_last.start;
             subseq_global.end = subseq_child_last.end;
             subseq_global.len = subseq_child_last.len;
