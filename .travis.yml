@@ -12,8 +12,8 @@ install:
   - sudo pip install cpplint
 
 script:
-  - cppcheck --enable=all --language=c --check-config include/*.h src/*.c --suppress=missingInclude
-  - cpplint include/*.h src/*.c tests/*.cpp
+  - cppcheck --enable=all --language=c --check-config lib_num_sequence/*/*.h lib_num_sequence/*/*.c src/*.c --suppress=missingInclude
+  - cpplint lib_num_sequence/*/*.h lib_num_sequence/*/*.c src/*.c tests/*.cpp
   - mkdir build && cd build
   - cmake ..
   - make clean && make
