@@ -11,6 +11,6 @@ typedef struct subsequence {
     size_t len;
 } subsequence;
 
-int max_number_sequence(const char *arr, subsequence *subseq_max, size_t arr_length);
+int max_number_sequence(const char *arr, subsequence *subseq_max, const size_t arr_length);
 
 #endif  // LIB_NUM_SEQUENCE_INCLUDE_NUMSEQ_H_

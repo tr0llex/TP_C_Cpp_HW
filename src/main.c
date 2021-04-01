@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include "numseq.h"
 
-#define TESTS_COUNT 1
+#define TESTS_COUNT 3
 
 int load_file_to_arr(FILE *file, char *arr, size_t count) {
     if (file == NULL) {
@@ -48,16 +48,14 @@ int main(int argc, char *argv[]) {
     char *arr_chars;
 
     long l1dcls = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
-
     if (l1dcls == -1) {
         l1dcls = sizeof(void *);
     }
-
     if (posix_memalign((void **) &arr_chars, l1dcls, sizeof(char) * file_info.st_size)) {
         return CODE_ERROR;
     }
 
-    if (load_file_to_arr(file, arr_chars, file_info.st_size) == -1) {
+    if (load_file_to_arr(file, arr_chars, file_info.st_size) == CODE_ERROR) {
         return CODE_ERROR;
     }
 
@@ -73,7 +71,9 @@ int main(int argc, char *argv[]) {
         if (clock_gettime(_POSIX_MONOTONIC_CLOCK, &start) == -1) {
             return CODE_ERROR;
         }
-        max_number_sequence(arr_chars, &subseq_max_c, file_info.st_size);
+        if (max_number_sequence(arr_chars, &subseq_max_c, file_info.st_size) == CODE_ERROR) {
+            return CODE_ERROR;
+        }
         if (clock_gettime(_POSIX_MONOTONIC_CLOCK, &finish) == -1) {
             return CODE_ERROR;
         }
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
         average[0] += elapsed[i];  // add to consistent
 
         void *library = 0;
-        int (*max_number_sequence)(const char *arr, subsequence *subseq_max, size_t arr_length);
+        int (*max_number_sequence)(const char *arr, subsequence *subseq_max, const size_t arr_length);
         library = dlopen("./lib_num_sequence_parallel.so", RTLD_NOW);
         if (!library) {
             printf("%s", "Library not found");
@@ -94,7 +94,9 @@ int main(int argc, char *argv[]) {
         if (clock_gettime(_POSIX_MONOTONIC_CLOCK, &start) == -1) {
             return CODE_ERROR;
         }
-        (*max_number_sequence)(arr_chars, &subseq_max_p, file_info.st_size);
+        if ((*max_number_sequence)(arr_chars, &subseq_max_p, file_info.st_size) == CODE_ERROR) {
+            return CODE_ERROR;
+        }
         if (clock_gettime(_POSIX_MONOTONIC_CLOCK, &finish) == -1) {
             return CODE_ERROR;
         }

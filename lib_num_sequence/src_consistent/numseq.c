@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include "numseq.h"
 
-int max_number_sequence(const char *arr, subsequence *subseq_max, size_t arr_length) {
+int max_number_sequence(const char *arr, subsequence *subseq_max, const size_t arr_length) {
     if (arr == NULL || subseq_max == NULL) {
         return CODE_ERROR;
     }
