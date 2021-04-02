@@ -6,6 +6,11 @@ language: c
 
 compiler: gcc
 
+before_install: |
+  if ! [ -f ./tests/test100mb.txt ]; then
+    cd tests && python3 stress_test.py;
+  fi
+
 install:
   - sudo apt-get install valgrind
   - sudo apt-get install cppcheck
@@ -18,6 +23,11 @@ script:
   - cmake ..
   - make clean && make
   - valgrind --tool=memcheck --leak-check=full ctest
+  - ./hw2 ../tests/test100mb.txt
+
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/tests/test100mb.txt
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
