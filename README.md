@@ -1,7 +1,7 @@
 # ИЗ №2 (*Индивидуальное Задание*)
 
 [![Build Status](https://travis-ci.com/tr0llex/TP_C_Cpp_HW.svg?branch=HW2)](https://travis-ci.com/tr0llex/TP_C_Cpp_HW)
-[![codecov](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW/branch/HW2/graph/badge.svg?token=OKOEZ1WBM0)](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW)
+[![codecov](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW/branch/HW2/graph/badge.svg)](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW)
 
 
 Вывод для файла размером **100 MB**:
