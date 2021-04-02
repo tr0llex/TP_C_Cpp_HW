@@ -94,19 +94,3 @@ TEST(test_consistent, test6) {
     ASSERT_EQ(subseq_max.end, 19);
     ASSERT_EQ(subseq_max.len, 17);
 }
-
-
-
-/*
-TEST(stress_test, test) {
-    const char *filename = "test_stress.txt";
-
-    long result_parallel[2] = {};
-    long result_sequential[2] = {};
-    long size = file_size(filename);
-    sequential(filename, size, result_sequential);
-    parallel(filename, size, result_parallel);
-    ASSERT_EQ(result_parallel[0], result_sequential[0]);
-    ASSERT_EQ(result_parallel[1], result_sequential[1]);
-}
-*/

@@ -6,19 +6,13 @@ language: c
 
 compiler: gcc
 
-cache:
-  directories:
-    - $TRAVIS_BUILD_DIR/tests/test100mb.txt
-
-before_install:
-  - if ! [ -f ./tests/test100mb.txt ]; then cd tests && python3 stress_test.py; fi
-
 install:
   - sudo apt-get install valgrind
   - sudo apt-get install cppcheck
   - sudo pip install cpplint
 
 script:
+  - cd tests && python3 stress_test.py && cd ..
   - cppcheck --enable=all --language=c --check-config lib_num_sequence/*/*.h lib_num_sequence/*/*.c src/*.c --suppress=missingInclude
   - cpplint lib_num_sequence/*/*.h lib_num_sequence/*/*.c src/*.c tests/*.cpp
   - mkdir build && cd build

@@ -3,7 +3,6 @@
 extern "C" {
 #include "numseq.h"
 #include <dlfcn.h>
-#include <sys/stat.h>
 }
 
 TEST(stress_and_comparison_test, test) {
