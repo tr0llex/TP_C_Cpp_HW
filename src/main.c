@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include "numseq.h"
 
-#define TESTS_COUNT 3
+#define TESTS_COUNT 5
 
 int load_file_to_arr(FILE *file, char *arr, size_t count) {
     if (file == NULL) {
@@ -114,8 +114,8 @@ int main(int argc, char *argv[]) {
     }
     average[0] = average[0] / TESTS_COUNT;
     average[1] = average[1] / TESTS_COUNT;
-    printf("Consistent series average time: %lf\n", average[0]);
-    printf("Parallel series average time: %lf\n", average[1]);
+    printf("Consistent series average time:  %lf sec\n", average[0]);
+    printf("Parallel series average time:    %lf sec\n", average[1]);
 
     free(arr_chars);
     return CODE_SUCCESS;

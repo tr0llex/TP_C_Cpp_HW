@@ -1,6 +1,6 @@
-include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/lib_num_sequence/include")
 
-file(GLOB sources "${PROJECT_SOURCE_DIR}/src/*.c")
+file(GLOB sources "${PROJECT_SOURCE_DIR}/lib_num_sequence/src_consistent/*.c")
 list(REMOVE_ITEM sources "${PROJECT_SOURCE_DIR}/src/main.c")
 
 file(GLOB tests "${PROJECT_SOURCE_DIR}/tests/*.cpp")
@@ -13,6 +13,6 @@ foreach(file ${tests})
             ${sources}
             ${file}
             "${PROJECT_SOURCE_DIR}/tests/main.cpp")
-    target_link_libraries("${name}_tests" gtest_main)
+    target_link_libraries("${name}_tests" gtest_main ${CMAKE_DL_LIBS})
     add_test(NAME ${name} COMMAND "${name}_tests")
 endforeach()

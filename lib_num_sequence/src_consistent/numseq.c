@@ -6,7 +6,7 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, const size_t a
         return CODE_ERROR;
     }
 
-    subsequence subseq_cur = {0, 0, 0};
+    subsequence subseq_cur = {0};
     for (size_t i = 0; i < arr_length; i++) {
         char ch = arr[i];
         if ((ch >= '0') && (ch <= '9')) {

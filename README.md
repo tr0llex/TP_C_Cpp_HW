@@ -3,6 +3,13 @@
 [![Build Status](https://travis-ci.com/tr0llex/TP_C_Cpp_HW.svg?branch=HW2)](https://travis-ci.com/tr0llex/TP_C_Cpp_HW)
 [![codecov](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW/branch/HW2/graph/badge.svg?token=OKOEZ1WBM0)](https://codecov.io/gh/tr0llex/TP_C_Cpp_HW)
 
+
+Вывод для файла размером **100 MB**:
+```
+Consistent series average time:  1.035376 sec
+Parallel series average time:    0.150945 sec
+```
+
 ## Вариант #19
 
 Сравните и выведите в консоль время работы последовательного и параллельного с использованием нескольких процессов алгоритмов, каждый из которых выделяет в динамической памяти символьный массив размером 100 Мб и выполняет поиск в тексте максимальной последовательности цифр.

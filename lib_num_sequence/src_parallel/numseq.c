@@ -48,10 +48,10 @@ int child_process(const char *arr, int current_id, const size_t *ranges, int pip
         return CODE_ERROR;
     }
 
-    subsequence subseq_cur = {0};
-    subsequence subseq_max_child = {0};
-    subsequence subseq_first = {0};
-    subsequence subseq_last = {0};
+    subsequence subseq_cur = {0};  // Structure for storing current subsequence on current range
+    subsequence subseq_max_child = {0};  // Structure for storing maximum subsequence on current range
+    subsequence subseq_first = {0};  // Structure for storing first subsequence on current range
+    subsequence subseq_last = {0};  // Structure for storing last subsequence on current range
 
     for (size_t i = ranges[current_id]; i < ranges[current_id + 1]; i++) {
         char ch = arr[i];
@@ -100,8 +100,7 @@ int parent_process(int pipes[][2], int process_count, subsequence *subseq_max, c
         return CODE_ERROR;
     }
 
-    // Структура для хранения подпоследовательностей, лежащих на нескольких отрезках
-    subsequence subseq_global = {0};
+    subsequence subseq_global = {0};  // Structure for storing subsequences on several ranges at once
     for (int i = 0; i < process_count; i++) {
         close(pipes[i][1]);
 
@@ -153,7 +152,7 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, const size_t a
         return CODE_ERROR;
     }
 
-    size_t process_count = (arr_length > 100) ? sysconf(_SC_NPROCESSORS_ONLN) : 2;
+    size_t process_count = sysconf(_SC_NPROCESSORS_ONLN);
 
     size_t *ranges = (size_t *) calloc(process_count + 1, sizeof(size_t));
     if (create_ranges(process_count, arr_length, ranges) == CODE_ERROR) {
