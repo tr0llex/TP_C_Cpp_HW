@@ -6,8 +6,8 @@
 
 Вывод для файла размером **100 MB**:
 ```
-Consistent series average time:  1.035376 sec
-Parallel series average time:    0.150945 sec
+Consistent series average time:  0.697826 sec
+Parallel series average time:    0.108027 sec
 ```
 
 ## Вариант #19
