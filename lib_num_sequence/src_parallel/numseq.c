@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
 #include <wait.h>
 #include "numseq.h"
 
@@ -34,16 +33,24 @@ int fork_and_get_id(int *processes, const int process_count) {
     return getpid();
 }
 
-void free_ranges_and_processes(size_t *ranges, int *processes) {
+void free_ranges_and_processes(size_t *ranges, int *processes, int **pipes, int pipes_count) {
     if (ranges) {
         free(ranges);
     }
     if (processes) {
         free(processes);
     }
+    if (pipes) {
+        for (int i = 0; i < pipes_count; i++) {
+            if (pipes[i]) {
+                free(pipes[i]);
+            }
+        }
+        free(pipes);
+    }
 }
 
-int child_process(const char *arr, int current_id, const size_t *ranges, int pipes[][2]) {
+int child_process(const char *arr, int current_id, const size_t *ranges, int **pipes) {
     if (arr == NULL || ranges == NULL || pipes == NULL) {
         return CODE_ERROR;
     }
@@ -95,7 +102,7 @@ int child_process(const char *arr, int current_id, const size_t *ranges, int pip
     return CODE_SUCCESS;
 }
 
-int parent_process(int pipes[][2], int process_count, subsequence *subseq_max, const size_t *ranges, int *processes) {
+int parent_process(int **pipes, int process_count, subsequence *subseq_max, const size_t *ranges, int *processes) {
     if (pipes == NULL || subseq_max == NULL || ranges == NULL || processes == NULL) {
         return CODE_ERROR;
     }
@@ -109,20 +116,17 @@ int parent_process(int pipes[][2], int process_count, subsequence *subseq_max, c
         }
 
         subsequence subseq_child_max = {0};
+        subsequence subseq_child_first = {0};
+        subsequence subseq_child_last = {0};
         read(pipes[i][0], &subseq_child_max, sizeof(subsequence));
+        read(pipes[i][0], &subseq_child_first, sizeof(subsequence));
+        read(pipes[i][0], &subseq_child_last, sizeof(subsequence));
 
         if (subseq_child_max.len > subseq_max->len) {
             subseq_max->start = subseq_child_max.start;
             subseq_max->end = subseq_child_max.end;
             subseq_max->len = subseq_child_max.len;
         }
-
-        subsequence subseq_child_first = {0};
-        read(pipes[i][0], &subseq_child_first, sizeof(subsequence));
-
-        subsequence subseq_child_last = {0};
-        read(pipes[i][0], &subseq_child_last, sizeof(subsequence));
-
 
         if (subseq_global.len > 0) {
             if (subseq_child_first.start == ranges[i]) {
@@ -155,18 +159,32 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, const size_t a
     size_t process_count = sysconf(_SC_NPROCESSORS_ONLN);
 
     size_t *ranges = (size_t *) calloc(process_count + 1, sizeof(size_t));
+    if (ranges == NULL) {
+        return CODE_ERROR;
+    }
     if (create_ranges(process_count, arr_length, ranges) == CODE_ERROR) {
         return CODE_ERROR;
     }
 
-    int pipes[MAX_PROCESS_COUNT][2];
-    memset(pipes, 0, MAX_PROCESS_COUNT * 2);
+    int **pipes = (int **) calloc(process_count, sizeof(int *));
+    if (pipes == NULL) {
+        return CODE_ERROR;
+    }
+    for (int i = 0; i < process_count; i++) {
+        pipes[i] = (int *) calloc(2, sizeof(int));  // 2 because each process has only 2 pipes: for read, for write
+        if (pipes[i] == NULL) {
+            return CODE_ERROR;
+        }
+    }
 
     for (int i = 0; i < process_count; i++) {
         pipe(pipes[i]);
     }
 
     int *processes = (int *) calloc(process_count, sizeof(pid_t));
+    if (processes == NULL) {
+        return CODE_ERROR;
+    }
     int current_id = fork_and_get_id(processes, process_count);
     if (current_id == -1) {
         return CODE_ERROR;
@@ -177,13 +195,13 @@ int max_number_sequence(const char *arr, subsequence *subseq_max, const size_t a
         if (child_process(arr, current_id, ranges, pipes) == CODE_ERROR) {
             return CODE_ERROR;
         }
-        free_ranges_and_processes(ranges, processes);
+        free_ranges_and_processes(ranges, processes, pipes, process_count);
         exit(0);
     }
 
     if (parent_process(pipes, process_count, subseq_max, ranges, processes) == CODE_ERROR) {
         return CODE_ERROR;
     }
-    free_ranges_and_processes(ranges, processes);
+    free_ranges_and_processes(ranges, processes, pipes, process_count);
     return CODE_SUCCESS;
 }

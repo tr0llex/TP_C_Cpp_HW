@@ -9,7 +9,7 @@
 #define TESTS_COUNT 5
 
 int load_file_to_arr(FILE *file, char *arr, size_t count) {
-    if (file == NULL) {
+    if (file == NULL || arr == NULL) {
         return CODE_ERROR;
     }
 
@@ -45,12 +45,11 @@ int main(int argc, char *argv[]) {
         return CODE_ERROR;
     }
 
-    char *arr_chars;
-
     long l1dcls = sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
     if (l1dcls == -1) {
         l1dcls = sizeof(void *);
     }
+    char *arr_chars;
     if (posix_memalign((void **) &arr_chars, l1dcls, sizeof(char) * file_info.st_size)) {
         return CODE_ERROR;
     }

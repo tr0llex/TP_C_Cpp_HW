@@ -3,7 +3,6 @@
 
 #define CODE_ERROR 1
 #define CODE_SUCCESS 0
-#define MAX_PROCESS_COUNT 48
 
 typedef struct subsequence {
     size_t start;
