@@ -1,0 +1,25 @@
+arch: amd64
+os: linux
+dist: focal
+
+language: c
+
+compiler: gcc
+
+install:
+  - sudo apt-get install valgrind
+  - sudo apt-get install cppcheck
+  - sudo pip install cpplint
+
+script:
+  - cd tests && python3 stress_test.py && cd ..
+  - cppcheck --enable=all --language=c --check-config lib_num_sequence/*/*.h lib_num_sequence/*/*.c src/*.c --suppress=missingInclude
+  - cpplint lib_num_sequence/*/*.h lib_num_sequence/*/*.c src/*.c tests/*.cpp
+  - mkdir build && cd build
+  - cmake ..
+  - make clean && make
+  - valgrind --tool=memcheck --leak-check=full ctest
+  - ./hw2 ../tests/test100mb.txt
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
