@@ -62,27 +62,27 @@ int child_process(const char *arr, int current_id, const size_t *ranges, int **p
 
     for (size_t i = ranges[current_id]; i < ranges[current_id + 1]; i++) {
         char ch = arr[i];
-        if ((ch >= '0') && (ch <= '9')) {
-            if (subseq_cur.len == 0) {
+        if (likely((ch >= '0') && (ch <= '9'))) {
+            if (unlikely(subseq_cur.len == 0)) {
                 subseq_cur.start = i;
                 subseq_last.start = i;
                 subseq_last.len = 0;
             }
             subseq_cur.len++;
             subseq_last.len++;
-            if (subseq_cur.len > subseq_max_child.len) {
+            if (unlikely(subseq_cur.len > subseq_max_child.len)) {
                 subseq_max_child.start = subseq_cur.start;
                 subseq_max_child.len = subseq_cur.len;
             }
-            if (subseq_first.len == 0) {
+            if (unlikely(subseq_first.len == 0)) {
                 subseq_first.start = subseq_cur.start;
                 subseq_first.len = subseq_cur.len;
             }
-            if (subseq_first.start == subseq_cur.start) {
+            if (unlikely(subseq_first.start == subseq_cur.start)) {
                 subseq_first.len = subseq_cur.len;
             }
         } else {
-            if (subseq_cur.len > 0) {
+            if (likely(subseq_cur.len > 0)) {
                 subseq_last.start = subseq_cur.start;
                 subseq_last.len = subseq_cur.len;
             }
